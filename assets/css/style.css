@@ -232,21 +232,11 @@ dd {
     margin: 0;
 }
 
-dt a,
-dt a:visited {
-    color: #ececec;
-    text-decoration: none;
-}
-
-dt a:hover {
-    color: #ececec;
-    text-decoration: underline;
-}
-
 p {
     max-width:30em;
     margin: 1em auto;
     text-align:left;
+    padding: 0 1em;
 }
 
 .notes {
