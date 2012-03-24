@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <title>Conversational Latin Phrases</title>
+</head>
+
+<body>
+  <!-- Main container -->
+  <div role="main" id="main">
+
+    <div id="conversational-latin">
+    </div>
+
+  </div>
+
+
+  <!-- Libraries -->
+  <script src="assets/js/libs/jquery.js"></script>
+  <script src="assets/js/libs/underscore.js"></script>
+  <script src="assets/js/libs/backbone.js"></script>
+  <script src="assets/js/libs/backbone.localStorage.js"></script>
+
+
+  <!-- Application -->
+  <script src="app/conversational-latin.js"></script>
+
+  <!-- Templates -->
+  
+  <script type="text/template" id="phrase-template">
+
+      <dl>
+        <dt><%= phrase %></dt>
+        <dd>
+          <%= translation %>
+        </dd>
+      </dl>
+
+      <a href="#random" id="random" title="Next">
+        &#<%= 9856 + ~~ (Math.random() * 6) %>;
+        &#<%= 9856 + ~~ (Math.random() * 6) %>;
+      </a>
+
+      <p class="notes">
+        <%= notes %>
+        <% if (obj.url) { %>
+          <a target="_blank" href="http://en.wikipedia.org<%= url %>">Wikipedia</a>
+        <% } %>
+      </p>
+
+  </script>
+
+  <script type="text/template" id="fetch-template">
+
+    <h2>Please wait...</h2>
+
+    <p class="informative">Latin phrases are being fetched from Wikipedia. This is a
+    one-time thing, and the phrases will be stored locally for your
+    future convenience. Thank you for your patience.</p>
+
+  </script>
+
+</body>
+</html>
