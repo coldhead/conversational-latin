@@ -16,7 +16,7 @@ $(document).ready(function () {
 	    // Phrases without translations are next to worthless.
 	    valid = attrs.translation || console.log('Missing translation', attrs) && false;
 
-	    if (! valid) return false;
+	    if (! valid) return 'invalid';
 	}
 	
     });
