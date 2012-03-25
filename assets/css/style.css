@@ -236,11 +236,12 @@ dd {
 
 .notes {
     max-width:30em;
+    min-width:16em;
+    width: 33%;
     margin: 1.4em auto;
     font-size: 16px;
     text-align: justify;
     text-shadow: none;
-    width: 33%;
     font-family: serif;
     border: 1px solid rgba(0,0,0,0.1);
     padding: 1.5em;
