@@ -43,12 +43,14 @@
         &#<%= 9856 + ~~ (Math.random() * 6) %>;
       </a>
 
+      <% if (notes) { %>
       <p class="notes">
         <%= notes %>
         <% if (obj.url) { %>
           <a target="_blank" href="http://en.wikipedia.org<%= url %>">Wikipedia</a>
         <% } %>
       </p>
+      <% } %>
 
   </script>
 
