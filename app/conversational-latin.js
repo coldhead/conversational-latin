@@ -25,86 +25,15 @@ $(document).ready(function () {
 	model: Phrase,
 	localStorage: new Store("latin-phrases"),
 
-	randomID: function () {
-	    return _.shuffle(this.pluck('id'))[0];
-	}
-    });
-
-
-    var PhraseView = Backbone.View.extend({
-	tagName: 'article',
-	template: _.template($('#phrase-template').html()),
-
-	render: function () {
-	    $(this.el).html(this.template(this.model.toJSON()));
-	    return this;
-	}
-    });
-
-    var FetchView = Backbone.View.extend({
-	tagname: 'article',
-	template: _.template($('#fetch-template').html()),
-
-	render: function () {
-	    $(this.el).html(this.template());
-	    return this;
-	}
-    });
-
-    var AppView = Backbone.View.extend({
-	el: $('#conversational-latin'),
-
-	events: {
-	    "click #random": "randomPhrase"
-	},
-
 	initialize: function () {
-	    window.phrases = new PhraseCollection;
-	    phrases.fetch();
-
-	    console.log(phrases.length, 'phrases available');
+	    this.fetch();
+	    if (this.length === 0) {
+		this.populate();
+	    }
 	},
 
-	randomPhrase: function () {
-	    var id = phrases.randomID();
-	    Backbone.history.navigate('phrase/' + id, true);
-	    return false;
-	},
-
-	render: function () {
-	    console.log('app render');
-	}
-    });
-
-
-    var AppRouter = Backbone.Router.extend({
-	routes: {
-	    "phrase/:id": "showPhrase",
-	    "random": "randomPhrase",
-	    "fetch": "fetchPhrases",
-	    "nuke": "reset",
-	    "*actions": "defaultRoute"
-	},
-
-	showPhrase: function (id) {
-	    var phrase = phrases.get(id);
-	    var view = new PhraseView({model: phrase});
-
-	    var $dest = $('#conversational-latin');
-	    $dest.empty();
-	    $dest.prepend(view.render().el);
-	},
-
-	randomPhrase: function () {
-	    PhraseBook.randomPhrase();
-	},
-
-	fetchPhrases: function () {
-	    var view = new FetchView({});
-	    var $dest = $('#conversational-latin');
-	    $dest.empty();
-	    $dest.prepend(view.render().el);
-
+	populate: function () {
+	    var phrases = this;
 	    console.log('Fetching phrases from Wikipedia...');
 	    $.ajax({
 		url: 'http://en.wikipedia.org/w/api.php',
@@ -137,22 +66,91 @@ $(document).ready(function () {
 		    });
 
 		    console.log("Phrasebook has", phrases.length, "entries");
-
-		    PhraseBook.randomPhrase();
+		    window.location.reload();
 		}
 	    });
 	},
 
+	randomID: function () {
+	    return _.shuffle(this.pluck('id'))[0];
+	}
+    });
+
+
+    var PhraseView = Backbone.View.extend({
+	tagName: 'article',
+	template: _.template($('#phrase-template').html()),
+
+	render: function () {
+	    $(this.el).html(this.template(this.model.toJSON()));
+	    return this;
+	}
+    });
+
+    var AppView = Backbone.View.extend({
+	el: $('#conversational-latin'),
+
+	events: {
+	    "click #random": "randomPhrase"
+	},
+
+	initialize: function () {
+	    window.phrases = new PhraseCollection;
+	    console.log(phrases.length, 'phrases available');
+	},
+
+	randomPhrase: function () {
+	    var id = phrases.randomID();
+
+	    // If we don't get an ID, the collection is probably still populating.
+	    id && Backbone.history.navigate('phrase/' + id, true);
+	    return false;
+	},
+
+	render: function () {
+	    console.log('app render');
+	}
+    });
+
+
+    var AppRouter = Backbone.Router.extend({
+	routes: {
+	    "phrase/:id": "showPhrase",
+	    "random": "randomPhrase",
+	    "nuke": "reset",
+	    "*actions": "defaultRoute"
+	},
+
+	showPhrase: function (id) {
+	    if (phrases.length === 0) return; // Collection is still populating.
+
+	    var phrase = phrases.get(id);
+
+	    if (! phrase) {
+		return; // Phrase not found!
+	    }
+
+	    var view = new PhraseView({model: phrase});
+
+	    var $dest = $('#conversational-latin');
+	    $dest.empty();
+	    $dest.prepend(view.render().el);
+	},
+
+	randomPhrase: function () {
+	    PhraseBook.randomPhrase();
+	},
+
 	reset: function () {
 	    console.log('Nuking ', phrases.length, 'phrases');
-	    phrases.reset ();
+	    phrases.reset();
 	    localStorage.clear();
 	    console.log(phrases.length, 'phrases remain');
 	},
 
 	defaultRoute: function () {
-	    // Unless we're given something else to do, we either forward to a random entry, or load entries, if needed.
-	    phrases.length ? Backbone.history.navigate('random', true) : Backbone.history.navigate('fetch', true);
+	    // Unless we're given something else to do, we forward to a random entry.
+	    Backbone.history.navigate('random', {trigger: true});
 	}
     });
 
