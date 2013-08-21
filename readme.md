@@ -9,7 +9,6 @@ Browse Latin phrases from Wikipedia
   * H5BP
   * Mobile caching considerations: AppCache / Offline|Online Events / CDNs / Modernizr
   * Search functionality (English & Latin)
-  * Github hosting (might as well, right?)
   * Legalese (Creative Commons attribution for Wikipedia content has to appear somewhere, right?)
   
 # Credits
