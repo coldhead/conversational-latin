@@ -1,162 +1,161 @@
-$(document).ready(function () {
-    var Phrase = Backbone.Model.extend({
-	defaults: function () {
-	    return {
-		id: null,
-		phrase: '',
-		translation: '',
-		url: '',
-		notes: ''
-	    };
-	},
+// $(document).ready(function () {
 
-	validate: function (attrs) {
-	    var valid;
+//   phraseApp.Phrase = Backbone.Model.extend({
+// 		defaults: function () {
+// 		  return {
+// 				id: null,
+// 				phrase: '',
+// 				translation: '',
+// 				url: '',
+// 				notes: ''
+// 		  };
+// 		},
 
-	    // Phrases without translations are next to worthless.
-	    valid = attrs.translation || console.log('Missing translation', attrs) && false;
+// 		validate: function (attrs) {
+// 		    var valid;
 
-	    if (! valid) return 'invalid';
-	}
-	
-    });
+// 		    // Phrases without translations are next to worthless.
+// 		    valid = attrs.translation || console.log('Missing translation', attrs) && false;
 
-    var PhraseCollection = Backbone.Collection.extend({
-	model: Phrase,
-	localStorage: new Store("latin-phrases"),
+// 		    if (! valid) return 'invalid';
+// 		}
+//   });
 
-	initialize: function () {
-	    this.fetch();
-	    if (this.length === 0) {
-		this.populate();
-	    }
-	},
+//   var PhraseCollection = Backbone.Collection.extend({
+// 		model: phraseApp.Phrase,
+// 		localStorage: new Store("latin-phrases"),
 
-	populate: function () {
-	    var phrases = this;
-	    console.log('Fetching phrases from Wikipedia...');
-	    $.ajax({
-		url: 'http://en.wikipedia.org/w/api.php',
-		data: {
-		    action: 'parse',
-		    page: 'List_of_Latin_phrases_(full)',
-		    format: 'json',
-		    prop: 'text'
-		},
-		dataType: 'jsonp',
-		success: function(wikipedia) {
-		    
-		    var $page = $('<div>').html(wikipedia.parse.text['*']);
-		    
-		    $page.find('.wikitable tr').each(function(i) {
-			var $cells = $(this).find('td');
-			if (!$cells.length) return;
-			
-			// Surely there is a cleaner way to pick these apart.
-			var entry = {
-			    id: i,
-			    phrase: $($cells[0]).text(),
-			    translation: $($cells[1]).text(),
-			    url: $($cells[0]).find('a').attr('href'),
-			    notes: $($cells[2]).text()
-			};
+// 		initialize: function () {
+// 		  this.fetch();
+// 		  if (this.length === 0) {
+// 				this.populate();
+// 	    }
+// 	},
 
-			phrases.create(entry) || console.log('Validation failure', $cells);
-			
-		    });
+// 	populate: function () {
+// 	    var phrases = this;
+// 	    console.log('Fetching phrases from Wikipedia...');
 
-		    console.log("Phrasebook has", phrases.length, "entries");
-		    window.location.reload();
-		}
-	    });
-	},
+// 	    $.ajax({
+// 				url: 'http://en.wikipedia.org/w/api.php',
+// 				data: {
+// 				    action: 'parse',
+// 				    page: 'List_of_Latin_phrases_(full)',
+// 				    format: 'json',
+// 				    prop: 'text'
+// 				},
+// 				dataType: 'jsonp',
+// 				success: function(wikipedia) {
+// 					var $page = $('<div>').html(wikipedia.parse.text['*']);
 
-	randomID: function () {
-	    return _.shuffle(this.pluck('id'))[0];
-	}
-    });
+// 				  $page.find('.wikitable tr').each(function(i) {
+// 						var $cells = $(this).find('td');
+// 						if (!$cells.length) return;
 
+// 						// Surely there is a cleaner way to pick these apart.
+// 						var entry = {
+// 						    id: i,
+// 						    phrase: $($cells[0]).text(),
+// 						    translation: $($cells[1]).text(),
+// 						    url: $($cells[0]).find('a').attr('href'),
+// 						    notes: $($cells[2]).text()
+// 						};
 
-    var PhraseView = Backbone.View.extend({
-	tagName: 'article',
-	template: _.template($('#phrase-template').html()),
+// 						phrases.create(entry) || console.log('Validation failure', $cells);
+// 				  });
 
-	render: function () {
-	    $(this.el).html(this.template(this.model.toJSON()));
-	    return this;
-	}
-    });
+// 			    console.log("Phrasebook has", phrases.length, "entries");
+// 			    window.location.reload();
+// 				}
+// 	 		});
+// 		},
 
-    var AppView = Backbone.View.extend({
-	el: $('#conversational-latin'),
-
-	events: {
-	    "click #random": "randomPhrase"
-	},
-
-	initialize: function () {
-	    window.phrases = new PhraseCollection;
-	    console.log(phrases.length, 'phrases available');
-	},
-
-	randomPhrase: function () {
-	    var id = phrases.randomID();
-
-	    // If we don't get an ID, the collection is probably still populating.
-	    id && Backbone.history.navigate('phrase/' + id, true);
-	    return false;
-	},
-
-	render: function () {
-	    console.log('app render');
-	}
-    });
+// 		randomID: function () {
+// 		    return _.shuffle(this.pluck('id'))[0];
+// 		}
+//   });
 
 
-    var AppRouter = Backbone.Router.extend({
-	routes: {
-	    "phrase/:id": "showPhrase",
-	    "random": "randomPhrase",
-	    "nuke": "reset",
-	    "*actions": "defaultRoute"
-	},
+  // var PhraseView = Backbone.View.extend({
+		// tagName: 'article',
+		// template: _.template($('#phrase-template').html()),
 
-	showPhrase: function (id) {
-	    if (phrases.length === 0) return; // Collection is still populating.
+		// render: function () {
+	 //    $(this.el).html(this.template(this.model.toJSON()));
+	 //    return this;
+		// }
+  // });
 
-	    var phrase = phrases.get(id);
+   //  var AppView = Backbone.View.extend({
+			// el: $('#conversational-latin'),
 
-	    if (! phrase) {
-		return; // Phrase not found!
-	    }
+			// events: {
+			//   "click #random": "randomPhrase"
+			// },
 
-	    var view = new PhraseView({model: phrase});
+			// initialize: function () {
+			//     window.phrases = new PhraseCollection;
+			//     console.log(phrases.length, 'phrases available');
+			// },
 
-	    var $dest = $('#conversational-latin');
-	    $dest.empty();
-	    $dest.prepend(view.render().el);
-	},
+			// randomPhrase: function () {
+			//     var id = phrases.randomID();
 
-	randomPhrase: function () {
-	    PhraseBook.randomPhrase();
-	},
+			//     // If we don't get an ID, the collection is probably still populating.
+			//     id && Backbone.history.navigate('phrase/' + id, true);
+			//     return false;
+			// },
 
-	reset: function () {
-	    console.log('Nuking ', phrases.length, 'phrases');
-	    phrases.reset();
-	    localStorage.clear();
-	    console.log(phrases.length, 'phrases remain');
-	},
+			// render: function () {
+			//     console.log('app render');
+			// }
+   //  });
 
-	defaultRoute: function () {
-	    // Unless we're given something else to do, we forward to a random entry.
-	    Backbone.history.navigate('random', {trigger: true});
-	}
-    });
 
-    var PhraseBook = new AppView();
+   //  var AppRouter = Backbone.Router.extend({
+			// routes: {
+			//     "phrase/:id": "showPhrase",
+			//     "random": "randomPhrase",
+			//     "nuke": "reset",
+			//     "*actions": "defaultRoute"
+			// },
 
-    var app_router = new AppRouter();
-    Backbone.history.start();
+			// showPhrase: function (id) {
+			//     if (phrases.length === 0) return; // Collection is still populating.
 
-});
+			//     var phrase = phrases.get(id);
+
+			//     if (! phrase) {
+			// 			return; // Phrase not found!
+			// 		}
+
+			//     var view = new PhraseView({model: phrase});
+
+			//     var $dest = $('#conversational-latin');
+			//     $dest.empty();
+			//     $dest.prepend(view.render().el);
+			// },
+
+			// randomPhrase: function () {
+			//     PhraseBook.randomPhrase();
+			// },
+
+			// reset: function () {
+			//     console.log('Nuking ', phrases.length, 'phrases');
+			//     phrases.reset();
+			//     localStorage.clear();
+			//     console.log(phrases.length, 'phrases remain');
+			// },
+
+			// defaultRoute: function () {
+			//     // Unless we're given something else to do, we forward to a random entry.
+			//     Backbone.history.navigate('random', {trigger: true});
+			// }
+   //  });
+
+   //  var PhraseBook = new AppView();
+
+   //  var app_router = new AppRouter();
+   //  Backbone.history.start();
+
+//});
