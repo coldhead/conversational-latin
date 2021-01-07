@@ -36,7 +36,7 @@ $(document).ready(function () {
 	    var phrases = this;
 	    console.log('Fetching phrases from Wikipedia...');
 	    $.ajax({
-		url: 'http://en.wikipedia.org/w/api.php',
+		url: '//en.wikipedia.org/w/api.php',
 		data: {
 		    action: 'parse',
 		    page: 'List_of_Latin_phrases_(full)',
