@@ -1,5 +1,5 @@
-@import url(http://fonts.googleapis.com/css?family=Mate+SC);
-@import url(http://fonts.googleapis.com/css?family=Flamenco);
+@import url(//fonts.googleapis.com/css?family=Mate+SC);
+@import url(//fonts.googleapis.com/css?family=Flamenco);
 
 /*
  * HTML5 ✰ Boilerplate ☭ ☣
@@ -19,7 +19,7 @@
    ========================================================================== */
 
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
-audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+audio, canvas, video { display: inline-block; }
 audio:not([controls]) { display: none; }
 [hidden] { display: none; }
 
@@ -147,7 +147,7 @@ label { cursor: pointer; }
  * 2. Correct alignment displayed oddly in IE6/7
  */
 
-legend { border: 0; *margin-left: -7px; padding: 0; }
+legend { border: 0; padding: 0; }
 
 /*
  * 1. Correct font-size not inheriting in all browsers
@@ -155,7 +155,7 @@ legend { border: 0; *margin-left: -7px; padding: 0; }
  * 3. Define consistent vertical alignment display in all browsers
  */
 
-button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; }
 
 /*
  * 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
@@ -169,7 +169,7 @@ button, input { line-height: normal; }
  * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
  */
 
-button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; *overflow: visible; }
+button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; }
 
 /*
  * Consistent box sizing and appearance
@@ -264,13 +264,16 @@ dd {
     text-decoration: none;
     border-radius: 5px;
     box-shadow: inset 0 0 15pt #ccc;
-    padding: 4px 4px 0px 4px;
+    padding: 4px 4px 2px 4px;
     font-size: 30px;
     cursor: pointer;
     text-shadow: none;
     white-space: nowrap;
     border: 1px solid #333;
+}
 
+#random span {
+   margin: 0 0.1em;
 }
 
 #random:hover {
@@ -311,7 +314,7 @@ dd {
    ========================================================================== */
 
 /* For image replacement */
-.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; *line-height: 0; }
+.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .ir br { display: none; }
 
 /* Hide from both screenreaders and browsers: h5bp.com/u */
@@ -329,7 +332,7 @@ dd {
 /* Contain floats: h5bp.com/q */
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
-.clearfix { *zoom: 1; }
+.clearfix { }
 
 
 

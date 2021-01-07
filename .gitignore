@@ -1,2 +1,4 @@
 # Backups.
 *~
+node_modules/
+dist/
