@@ -18,6 +18,8 @@ const loadLocalStoragePhrases = () => {
 
 const PHRASES = loadLocalStoragePhrases();
 
+console.table(PHRASES);
+
 const fetchPhraseData = async () => {
     const params = {
         action: 'parse',
@@ -38,6 +40,7 @@ const importPhrases = async () => {
     node.innerHTML = page;
     const rows = node.querySelectorAll('.wikitable tr');
     const tidy = (str) => {
+        if (!str) return;
         const p = document.createElement('p');
         p.innerText = str; // Magic to remove \n from strings
         return p.innerText;
@@ -47,6 +50,10 @@ const importPhrases = async () => {
         // Skip empty cells or cells without translations
         if (cells.length === 0) return;
         if (cells[1] === undefined) return;
+        // Wikipedia has inline <style> that appears in the innerText of elements.
+        // We have to remove any such style -- it's not Latin.
+        const inlineStyles = cells[0].querySelectorAll('style');
+        inlineStyles.forEach((style) => style.parentNode.removeChild(style)); // oh boy
         const phrase = new Phrase(
             cells[0].innerText, // phrase
             cells[1].innerText, // translation
@@ -55,6 +62,9 @@ const importPhrases = async () => {
         );
         PHRASES.push(phrase);
     });
+
+    const badPhrases = PHRASES.filter((p) => p.phrase === 'undefined' || p.translation === 'undefined' || p.notes === 'undefined');
+    console.table(badPhrases);
 };
 
 const ensurePhrases = async () => {
