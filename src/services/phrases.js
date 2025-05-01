@@ -39,10 +39,13 @@ const importPhrases = async () => {
     const node = document.createElement('div');
     node.innerHTML = page;
     const rows = node.querySelectorAll('.wikitable tr');
-    const tidy = (str) => {
-        if (!str) return;
+    const tidy = (notesNode) => {
+        if (!notesNode?.innerText) return;
+        // Citations render as [43] or similar in plain text. Not nice.
+        const citations = notesNode.querySelectorAll('a[href^="#cite"]');
+        citations.forEach((c) => c.parentNode.removeChild(c));
         const p = document.createElement('p');
-        p.innerText = str; // Magic to remove \n from strings
+        p.innerText = notesNode.innerText; // Magic to remove \n from strings
         return p.innerText;
     }
     rows.forEach((row, i) => {
@@ -58,7 +61,7 @@ const importPhrases = async () => {
             cells[0].innerText, // phrase
             cells[1].innerText, // translation
             cells[0].querySelector('a')?.getAttribute('href'), // link to a full article
-            tidy(cells[2]?.innerText), // notes
+            tidy(cells[2]), // notes
         );
         PHRASES.push(phrase);
     });
