@@ -2,6 +2,8 @@
 
 Browse Latin phrases from Wikipedia
 
+Try it here: https://coldhead.github.io/conversational-latin/
+
 # Todo
   * Error handling
   * Search functionality (English & Latin)
