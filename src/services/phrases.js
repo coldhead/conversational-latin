@@ -62,9 +62,6 @@ const importPhrases = async () => {
         );
         PHRASES.push(phrase);
     });
-
-    const badPhrases = PHRASES.filter((p) => p.phrase === 'undefined' || p.translation === 'undefined' || p.notes === 'undefined');
-    console.table(badPhrases);
 };
 
 const ensurePhrases = async () => {
